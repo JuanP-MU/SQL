@@ -1,0 +1,31 @@
+--Create a Tool shop database
+CREATE TABLE Tools (id INTEGER PRIMARY KEY,item TEXT,asile Integer,amount INTEGER,Price INTEGER);
+
+INSERT INTO Tools VALUES(1,"Hammer",4,120,12);
+INSERT INTO Tools VALUES(2,"driver",6,50,25);
+INSERT INTO Tools VALUES(3,"scraper",3,60,8);
+INSERT INTO Tools VALUES(4,"sandpaper",3,90,5);
+INSERT INTO Tools VALUES(5,"crowbar",4,50,29);
+INSERT INTO Tools VALUES(6,"Prybar",4,40,19);
+INSERT INTO Tools VALUES(7,"ball ping hammer",4,100,13);
+INSERT INTO Tools VALUES(8,"nails", 4, 200, 8);
+INsert INTO TOOLS VALUES(9,"Impact driver",6,50,50);
+INSERT INTO TOOLS VAlUES(10,"DECK SCREWS",6,150,15);
+INSERT INTO TOOLS VALUES(11,"Shovle",7,40,25);
+INSERT INTO TOOLS VALUES(12,"HOE",7,35,35);
+INSERT INTO TOOLS VALUES(13,"PICK AXE",7,40,29);
+INSERT INTO TOOLS VALUES(14,"Head lamp",1,150,15);
+INSERT INTO TOOLS VALUES(15,"HARDHAT",1,200,30);
+
+--Dispaly all available information form database
+SELECT * FROM Tools;
+--What is the total invertory of the shop
+SELECT SUM(amount)FROM TOOLs;
+-- THe total price of the inventory
+SELECT SUM(Price) FROM Tools;
+--What each aisle is valued
+SELECT asile,SUM(PRICE) FROM TOOLS GROUP BY asile;
+--Inventory order by price
+SELECT * FROM TOOLS ORDER BY Price;
+--Tools located passed asile 3
+SELECT ITem,Price, asile FROM Tools where asile > 3 ORDER BY Price;
