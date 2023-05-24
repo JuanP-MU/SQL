@@ -1,0 +1,33 @@
+/* Create table about Characters and There family title*/
+
+CREATE TABLE characters(id INTEGER Primary KEY, Name text,standing text);
+
+INSERT INTO characters(name,standing) values ("Queen Marika"
+, "Parent");
+INSERT INTO characters(name,standing) values ("Radagon of the Golden order","Parent");
+INSERT INTO characters(name,standing) values ("Rennala Queen of the full moon","Parent");
+INSERT INTO characters(name,standing) values ("Godfrey First Elden Lord", "Parent");
+INSERT INTO characters(name,standing) values ("Mohg Lord of blood", "Child");
+INSERT INTO characters(name,standing) values ("Morgott The Omen King", "Child");
+INSERT INTO characters(name,standing) values ("Godwyn The Golden","Child");
+INSERT INTO characters(name,standing) values ("Malenia the blade of Miquella","Child");
+INSERT INTO characters(name,standing) values ("Miquella of the Haligtree","Child");
+INSERT INTO characters(name,standing) values ("Starscourge Radahn","Child");
+INSERT INTO characters(name,standing) values ("Lunar Princess Ranni","Child");
+INSERT INTO characters(name,standing) values ("Practor Rykard","Child");
+select* from Characters ;
+--Create table grouping Child charatcers with their parents--
+CREATE TABLE Relationship(id INTEGER PRIMARY KEY,Character1_id integer,Character2_id INTEGER,CHaracter3_id integer,Relationship_TYPE text);
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (1,4,5,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (1,4,6,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (1,4,7,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (1,2,8,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (1,2,9,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (3,2,10,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (3,2,11,"Family");
+INSERT INTO Relationship (character1_id,Character2_id,Character3_id,Relationship_type)values (3,2,12,"Family");
+--Join the two tables into human readable format with joins--
+select*from Relationship;
+Select a.Name as "Mother", d.name as "Father", e.name as " Child" from Relationship b join Characters a on a.id=b.Character1_id 
+JOIN Characters d on d.id = Character2_id
+Join Characters e on e.id = Character3_id
