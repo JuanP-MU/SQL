@@ -1,0 +1,28 @@
+-- In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data. 
+
+
+-- 1.  How many orders were placed in January? 9681
+SELECT count(orderid) FROM BIT_DB.JanSales  Where length(orderID)=6 AND orderID <> 'order ID' ;
+
+--2. HOw many of those where for an iphone? 379 
+SELECT*FROM BIT_DB.JanSales  Where Product like 'Iphone' AND length(orderID)=6 AND orderID <> 'order ID' ;
+
+--3. Select the customer account numbers for all the orders placed in February.
+SELECT acctnum from BIT_DB.customers join BIT_DB.Febsales on Customers.order_id =FebSales.orderID; 
+
+--4.Which product was the cheapest one sold in January, and what ws the price? AAA Batteries(4-pack) price is 2.99
+SELECT Price,product from BIT_DB.JanSales
+WHERE price <>'Price each'and price <>'' and product <> 'Product'and product<>'' order BY price ASC limit 1; 
+
+--5.What is the total revenue for each product sold in January? 
+SELECT (sum(Quantity)*price) as revenue ,product from BIT_DB.Jansales group by product;
+ 
+--6.Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue? AA Batteries (4-pack), 2, 7.68
+SELECT sum(Quantity) as "amount sold", location,product, (sum(Quantity)*price) as revenue from BIT_DB.FebSales 
+where Location ='548 Lincoln St, Seattle, WA 98101' group by product ;
+--SELECT*from BIT_DB.Febsales;
+
+-- How many customers ordered more thern 2 products at a time in February, and what was the average amount spent for those customers. 278 order 2 products and the average spent was 12.79
+
+Select count( b.acctnum),avg(quantity)*price from BIT_DB.Febsales a left join BIT_DB.customers b on b.Order_id =a.orderID 
+where a.Quantity>2 and length(orderid) =6 and orderid<>'order ID';
