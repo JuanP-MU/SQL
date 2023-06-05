@@ -31,3 +31,26 @@ where a.Quantity>2 and length(orderid) =6 and orderid<>'order ID';
 SELECT sum(quantity),product, Location
 From BIT_DB.FebSales
 Where location like '%Los Angeles%'group by product;
+
+--9.Which Locations in New York received at leaast 3 orders in January, and how many orders did they eeach recieve?
+SELECT distinct location ,count(orderID) FROM BIT_DB.JanSales where location like '%NY%' and length(orderid) = 6 and orderid <>'Order ID' Group by location having count(orderid) > 2 ;
+
+--10.How many of eahch type of headphone were sold in Feburuary?
+SELECT distinct sum(quantity) ,product FROM BIT_DB.FebSales where product like '%headphone%'  Group by product;
+
+--11.What was the avergae amount spent per acccount in Feburuary?
+SELECT distinct sum(price*quantity)/count(cust.acctnum) From BIT_DB.FebSales Feb 
+left join BIT_DB.Customers cust on Feb.orderid = cust.order_id 
+Where length(orderid) = 6 and orderid <> 'order ID';
+
+--12.Whart was the average quantity of products perchased per account in Feburary?
+SELECT distinct sum(quantity)/count(cust.acctnum) From BIT_DB.FebSales Feb 
+left join BIT_DB.Customers cust on Feb.orderid = cust.order_id
+Where length(orderid) = 6 and orderid <> 'order ID';
+
+--13.which product brought in the most revenue in January and how much revenue did it bring in total?
+
+Select product, sum(price*quantity) as revenue FROM BIT_DB.Jansales
+ Group by product order by revenue DESC limit 1;
+
+
