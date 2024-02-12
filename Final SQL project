@@ -1,0 +1,134 @@
+---Show Customers (their full names, customer ID, and country) who are not in the US----
+select CustomerId, FirstName, LastName, Country from customers where country != 'USA'
+
+---Show only the Customers from Brazil.---
+Select * from customers where country = 'Brazil'
+
+----Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.---
+
+select customers.FirstName,customers.LastName,invoices.InvoiceId, invoices.InvoiceDate , invoices.BillingCountry
+ from invoices join customers on Invoices.CustomerId = customers.customerId where country = 'Brazil'
+ 
+--show ther employees who are sales agents--
+select * from employees where Title like  "Sales %% Agent"
+
+---Find a unique/distinct list of billing countries from the invoice table----
+
+select distinct BillingCOuntry from invoices group by BillingCountry 
+
+
+
+--Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.--
+
+WITH customer_invoices AS (
+Select * from invoices Join customers on  invoices.CustomerId = customers.CustomerId
+)
+
+Select Lastname, firstname, invoiceid from employees join customer_invoices 
+on employees.EmployeeId = customer_invoices.supportRepid
+
+--Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.--
+
+WITH customer_invoices AS (
+Select * from invoices Join customers on  invoices.CustomerId = customers.CustomerId
+)
+
+Select Invoiceid, employees.Lastname as employee_lastname
+, employees.firstname as Employee_firstname
+ ,billingcountry as Country,customer_invoices.lastname as Customer_lastname
+ , customer_invoices.firstname as Customer_firstname 
+,Total as invoice_total
+from employees join customer_invoices on employees.EmployeeId = customer_invoices.supportRepid
+
+--How many invoices were there in 2009?--
+
+select count(invoiceDate) from invoices where invoicedate like '2009%'
+
+-- what are the total sales for 2009?--
+
+select round(sum(total),2) as total_sales from invoices where invoicedate like '2009%'
+
+--write a query that includes the purchased track name with each invoice line ID?--
+
+
+select tracks.name, invoiceLineid from invoice_items join tracks on  invoice_items.TrackId = tracks.TrackId
+
+--write a quert that includes the purchase track name and artist name with each invoice line ID--
+
+
+with artist_album_cte as(
+select albums.albumid ,albums.artistid,artists.name from albums join artists on albums.ArtistId = artists.ArtistId
+),
+
+track_invoice_cte as (
+select tracks.name, invoicelineid, tracks.AlbumId from invoice_items join tracks on  invoice_items.TrackId = tracks.TrackId
+)
+
+Select track_invoice_cte.name as track_name ,artist_album_cte.name as artist_name ,track_invoice_cte.invoicelineid
+
+from track_invoice_cte join artist_album_cte on track_invoice_cte.Albumid = artist_album_cte.albumid
+
+--provide a query that shows all the tracks, include the album name, media type and genre--
+
+select * from genres
+select * from media_types
+
+WIth
+
+album_tracks as (
+select * from tracks left join albums on tracks.AlbumId = albums.AlbumId
+), 
+genre_tracks as (
+select *,genres.Name as Genres_name from tracks left join genres on tracks.GenreId = genres.GenreId)
+,
+album_genre as(
+Select * from album_tracks left join genre_tracks on album_tracks.TrackId = genre_tracks.TrackId
+)
+,
+media_final as (
+select *,media_types.Name as media_type from album_genre left join media_types on album_genre.MediaTypeId =media_types.MediaTypeId)
+
+select tracks.trackID, tracks.Name, media_final.title as Album_name ,media_final.Genres_name as Genre, media_final.media_type 
+from tracks  join media_final on tracks.TrackId = media_final.TrackId
+
+--show the total sales made by each sales agent.---
+
+WITH customer_invoices AS (
+Select * from invoices Join customers on  invoices.CustomerId = customers.CustomerId
+)
+
+Select Employeeid, employees.Lastname as employee_lastname
+, employees.firstname as Employee_firstname
+,round(sum(Total),2)  as total_sales
+from employees join customer_invoices on employees.EmployeeId = customer_invoices.supportRepid
+group by employee_lastname
+
+--Which sales agent made the most dollars in sales in 2009?--
+WITH customer_invoices AS (
+Select * from invoices Join customers on  invoices.CustomerId = customers.CustomerId
+)
+
+Select employees.Lastname as employee_lastname
+, employees.firstname as Employee_firstname
+,round(sum(Total),2)  as total_sales
+from employees join customer_invoices on employees.EmployeeId = customer_invoices.supportRepid
+where invoicedaTE LIKE '2009%'
+group by employee_lastname order  by total_sales desc LIMIT 1
+-----------------------------------------------------------------------------------------------------
+---how many repeating customers are there?---
+with repeated_customers as (
+select customers.FirstName,customers.LastName ,count(invoices.InvoiceId) as total_orders from  customers 
+join invoices on customers.customerID = invoices.customerId
+ group by customers.customerid order by total_orders desc)
+ 
+select count(lastname) as amount_of_repeated_customers from repeated_customers
+
+---what cityt has the most amount of customers
+
+select city, count(customerid) as total_customers from customers group by city order by total_customers desc
+
+---whitch composer has the most tracks sold---
+
+select tracks.Composer, count(invoice_items.InvoiceId) as  total_sold from tracks 
+join invoice_items on tracks.TrackId = invoice_items.TrackId where tracks.Composer <> 'null'
+ group by tracks.Composer order by total_sold desc limit 1
