@@ -1,3 +1,6 @@
+#In this project I analyzed a dataset called chinook, which represented a digital media store and included tables 
+# for artists, albums, media tracks, invoices, and customers.
+
 ---Show Customers (their full names, customer ID, and country) who are not in the US----
 select CustomerId, FirstName, LastName, Country from customers where country != 'USA'
 
